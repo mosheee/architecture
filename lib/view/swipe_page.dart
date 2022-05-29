@@ -53,23 +53,27 @@ class Swipe extends StatelessWidget {
     );
   }
 }
-
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({ Key? key }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Selector<UserModel,Tuple2<CardsState,CardOfGroup>>(
-    selector: (_,userModel) => Tuple2(userModel.cardsState, userModel.card),
-    builder: (context,data,child){
-      if(data.item1 == CardsState.cardsLoading){
-        return const Text('');
-      }else{
-        return  Text('${data.item2.groupName}');
-      }
-    });
+    return Selector<UserModel, CardsState>(
+        selector: (_, userModel) => userModel.cardsState,
+        builder: (context, cardsState, child) {
+          switch (cardsState) {
+            case CardsState.cardsReady:
+              {
+                return const CustomCard();
+              }
+            default:
+              return const SizedBox();
+          }
+        },
+      );
   }
 }
+
 
 class CustomCard extends StatelessWidget {
   const CustomCard({

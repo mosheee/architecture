@@ -1,5 +1,5 @@
 import 'package:architecture/view/chat_page.dart';
-import 'package:architecture/view/privateProfilePage.dart';
+import 'package:architecture/view/private_profile_page.dart';
 import 'package:architecture/view/swipe_page.dart';
 import 'package:architecture/view/switch_group_page.dart';
 import 'package:flutter/material.dart';
