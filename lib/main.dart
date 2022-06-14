@@ -1,5 +1,7 @@
+import 'package:architecture/view/error_page.dart';
 import 'package:architecture/view/home.dart';
 import 'package:architecture/view/private_profile_page.dart';
+import 'package:architecture/view/splash_page.dart';
 import 'package:architecture/viewModel/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +19,6 @@ import 'package:provider/provider.dart';
 // case 3 : manage states of widgets
 // a - we manage the state of the card's stack with the enums CardState.
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -27,11 +28,32 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('run');
     return ChangeNotifierProvider(
-      create: (context) => UserModel(),
-      child: MaterialApp(initialRoute: '/home', routes: {
-        '/home': (context) => const HomePage(),
-        '/editingPage': (context) => const EditingPage(),
+      create: (context) => ViewModel(),
+      child: Builder(builder: (context) {
+        return MaterialApp(
+          navigatorKey: Provider.of<ViewModel>(context).rootNavigatorKey,
+          initialRoute: '/',
+          onGenerateRoute: (setting) {
+            print(setting.name);
+            switch (setting.name) {
+              case '/':
+                return MaterialPageRoute(
+                    builder: (context) => const SplashPage());
+              case '/home':
+                return MaterialPageRoute(
+                    builder: (context) => const HomePage());
+              case '/editing':
+                return MaterialPageRoute(
+                    builder: (context) => const EditingPage());
+              case '/error':
+              default:
+                return MaterialPageRoute(
+                    builder: (context) => const ErrorPage());
+            }
+          },
+        );
       }),
     );
   }

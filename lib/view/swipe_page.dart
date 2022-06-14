@@ -12,7 +12,7 @@ class SwipePage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const CustomAppBar(),
+          title: const MyAppBar(),
         ),
         body: const Center(child: Swipe()),
       ),
@@ -27,11 +27,12 @@ class Swipe extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        context.read<UserModel>().getCard();
+        context.read<ViewModel>().getCard();
       },
-      child: Selector<UserModel, CardsState>(
+      child: Selector<ViewModel, CardsState>(
         selector: (_, userModel) => userModel.cardsState,
         builder: (context, cardsState, child) {
+          print('SwipeState changed');
           switch (cardsState) {
             case CardsState.cardsLoading:
               {
@@ -39,7 +40,7 @@ class Swipe extends StatelessWidget {
               }
             case CardsState.cardsReady:
               {
-                return const CustomCard();
+                return CustomCard();
               }
             case CardsState.noAvilableCards:
               {
@@ -53,27 +54,32 @@ class Swipe extends StatelessWidget {
     );
   }
 }
-class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({ Key? key }) : super(key: key);
+
+class MyAppBar extends StatelessWidget {
+  const MyAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Selector<UserModel, CardsState>(
-        selector: (_, userModel) => userModel.cardsState,
-        builder: (context, cardsState, child) {
-          switch (cardsState) {
-            case CardsState.cardsReady:
-              {
-                return const CustomCard();
-              }
-            default:
-              return const SizedBox();
-          }
-        },
-      );
+    return Selector<ViewModel, CardsState>(
+      selector: (_, userModel) => userModel.cardsState,
+      builder: (context, cardsState, child) {
+        switch (cardsState) {
+          case CardsState.cardsReady:
+            {
+              return Builder(
+                builder: (context) {
+                  final CardOfGroup card = context.watch<ViewModel>().card;
+                  return Text('${card.groupName}');
+                }
+              );
+            }
+          default:
+            return const SizedBox();
+        }
+      },
+    );
   }
 }
-
 
 class CustomCard extends StatelessWidget {
   const CustomCard({
@@ -82,11 +88,17 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // run every time userModel refresh card varieble
-    return Selector<UserModel, CardOfGroup>(
-        selector: (_, userModel) => userModel.card,
-        builder: (context, card, child) {
-          return Text('${card.groupName}');
-        });
+    final CardOfGroup card = context.watch<ViewModel>().card;
+    return Text('${card.groupName}');
+  }
+}
+
+class CustomAppBar extends StatelessWidget {
+  const CustomAppBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final CardOfGroup card = context.watch<ViewModel>().card;
+    return Text('${card.groupName}');
   }
 }

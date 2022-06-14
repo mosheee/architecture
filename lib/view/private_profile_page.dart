@@ -16,18 +16,9 @@ class _PrivateProfilePageState extends State<PrivateProfilePage> {
     return Center(
       child: GestureDetector(
         onTap: () async {
-          Navigator.pushNamed(context,'/editingPage');
-          // final name = await Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (newContext) =>
-          //             ChangeNotifierProvider<UserModel>.value(
-          //               value: UserModel(),
-          //               child: EditingPage(),
-          //             )));
-          // context.read<UserModel>().changeUserName(name);
+          Provider.of<ViewModel>(context,listen: false).navigateToEditPage();
         },
-        child: Selector<UserModel,String>(
+        child: Selector<ViewModel,String>(
           selector: (_,userModel) => userModel.userName,
           builder: (context, userName, child) {
           return Text(userName);
@@ -55,8 +46,9 @@ class _EditingPageState extends State<EditingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: SafeArea(
+    return Scaffold(
+      appBar: AppBar(title: Text('editingPage')),
+      body: SafeArea(
         child: Center(
           child: Column(
             children: [
@@ -68,8 +60,7 @@ class _EditingPageState extends State<EditingPage> {
               TextButton(
                   onPressed: () {
                     // Navigator.pop(context,myController.text);
-                    Provider.of<UserModel>(context,listen: false).changeUserName(myController.text);
-                    Navigator.pop(context);
+                    Provider.of<ViewModel>(context,listen: false).changeUserName(myController.text);
                   },
                   child: const Text('save'))
             ],

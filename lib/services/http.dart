@@ -1,7 +1,7 @@
 import 'package:architecture/models/card.dart';
 import 'package:architecture/models/user.dart';
 
-class HttpRequest {
+class Repository {
   Future<MyUser> getUser() async {
     return await Future.delayed(const Duration(seconds: 2), () {
       return MyUser(

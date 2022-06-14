@@ -3,9 +3,11 @@ import 'package:architecture/models/user.dart';
 import 'package:architecture/services/http.dart';
 import 'package:flutter/cupertino.dart';
 
-class UserModel extends ChangeNotifier {
-  final HttpRequest _httpRequest = HttpRequest();
-  
+class ViewModel extends ChangeNotifier {
+  final Repository _repository = Repository();
+  GlobalKey<NavigatorState> rootNavigatorKey =
+      GlobalKey<NavigatorState>(debugLabel: "root navigation key");
+
 // model variebles = variebels which used by the model to determine varieble states
   late List<CardOfGroup> _cards;
 
@@ -13,29 +15,27 @@ class UserModel extends ChangeNotifier {
   late CardsState _cardsState;
 
 // ui variebles
-  late MyUser _user;
+  late MyUser? _user;
 
   get card => _cards.last;
-  get userName => _user.name;
+  get userName => _user!.name;
   get cardsState => _cardsState;
 
-
-  
-  
-
-  UserModel() {
-    //initial ui variebles
-    _user = MyUser(name: 'moshe');
+  ViewModel() {
+    print('in');
     //initial ui components states
     _cardsState = CardsState.cardsLoading;
     //initial model varieble
     _cards = [];
-    //initial functions
+    //initialize resources 
+    getUser();
     getCard();
   }
 
-
-
+  getUser() async {
+    _user = await _repository.getUser();
+    _user != null ? navigateToHomePage() : navigateToErrorPage();
+  }
 
 //                                   SwipePage
 
@@ -43,7 +43,7 @@ class UserModel extends ChangeNotifier {
     if (_cards.isEmpty) {
       _cardsState = CardsState.cardsLoading;
       notifyListeners();
-      _cards = await _httpRequest.getCards();
+      _cards = await _repository.getCards();
       _cardsState = CardsState.cardsReady;
       notifyListeners();
     } else {
@@ -54,24 +54,22 @@ class UserModel extends ChangeNotifier {
         getCard();
       } else {
         _cards.removeLast();
-        _httpRequest.savesSwipes();
+        _repository.savesSwipes();
         notifyListeners();
       }
     }
   }
 
-  changeUserName(String newUserName){
-   _user.name= newUserName;
-   notifyListeners();
+  changeUserName(String newUserName) {
+    _user!.name = newUserName;
+    notifyListeners();
+     rootNavigatorKey.currentState!.pop();
   }
-
-
-
-
+  navigateToHomePage() => rootNavigatorKey.currentState!.pushReplacementNamed('/home');
+  navigateToErrorPage() => rootNavigatorKey.currentState!.pushNamed('/error');
+  navigateToEditPage() => rootNavigatorKey.currentState!.pushNamed('/editing');
 }
 
 //enum
 
 enum CardsState { noAvilableCards, cardsReady, cardsLoading }
-
-

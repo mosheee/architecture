@@ -10,7 +10,7 @@ class SwitchGroupPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        child: Selector<UserModel,String>(
+        child: Selector<ViewModel,String>(
           selector: (_,userModel) => userModel.userName,
           builder: (context,name,child){
             print('run');
