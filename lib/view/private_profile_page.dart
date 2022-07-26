@@ -1,28 +1,22 @@
 import 'package:architecture/models/user.dart';
-import 'package:architecture/viewModel/user_model.dart';
+import 'package:architecture/viewModel/userViewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PrivateProfilePage extends StatefulWidget {
+
+
+class PrivateProfilePage extends StatelessWidget {
   const PrivateProfilePage({Key? key}) : super(key: key);
 
   @override
-  State<PrivateProfilePage> createState() => _PrivateProfilePageState();
-}
-
-class _PrivateProfilePageState extends State<PrivateProfilePage> {
-  @override
   Widget build(BuildContext context) {
+    final MyUser user = context.read<UserViewModel>().user;
     return Center(
       child: GestureDetector(
         onTap: () async {
-          Provider.of<ViewModel>(context,listen: false).navigateToEditPage();
+          Provider.of<UserViewModel>(context,listen: false).navigateToEditPage();
         },
-        child: Selector<ViewModel,String>(
-          selector: (_,userModel) => userModel.userName,
-          builder: (context, userName, child) {
-          return Text(userName);
-        }),
+        child: Text(user.name)
       ),
     );
   }
@@ -59,8 +53,7 @@ class _EditingPageState extends State<EditingPage> {
               ),
               TextButton(
                   onPressed: () {
-                    // Navigator.pop(context,myController.text);
-                    Provider.of<ViewModel>(context,listen: false).changeUserName(myController.text);
+                    context.read<UserViewModel>().saveUserChanges(myController.text);
                   },
                   child: const Text('save'))
             ],

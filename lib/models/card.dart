@@ -1,7 +1,8 @@
 class CardOfGroup{ 
-  CardOfGroup({required this.groupName,this.images,this.description,this.groupMembers});
-  int groupName;
-  List? images;
+  CardOfGroup({required this.groupName,this.album,this.description,this.groupMembers,required this.averageAge});
+  String groupName;
+  List? album;
   String? description;
-  String? groupMembers;
+  List<String>? groupMembers;
+  int averageAge;
 }

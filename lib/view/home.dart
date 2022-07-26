@@ -1,8 +1,9 @@
-import 'package:architecture/view/chat_page.dart';
+import 'package:architecture/view/match_page.dart';
 import 'package:architecture/view/private_profile_page.dart';
 import 'package:architecture/view/swipe_page.dart';
-import 'package:architecture/view/switch_group_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:architecture/viewModel/userViewModel.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -22,38 +23,35 @@ class _HomePageState extends State<HomePage>
     _children = [
       const SwipePage(),
       const PrivateProfilePage(),
-      const ChatPage(),
-      const SwitchGroupPage()
+      const MatchPage(),
     ];
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: _children.length, vsync: this);
     _tabController.index = 0;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body:TabBarView(
-            children: _children,
-            controller: _tabController,
-          ),
-      bottomNavigationBar: TabBar(
-          unselectedLabelColor: Colors.black.withOpacity(0.3),
-          labelColor: Colors.blueGrey,
-          indicatorColor: Colors.transparent,
-          controller: _tabController,
-          tabs: const [
-            Tab(
-              icon: Icon(Icons.swipe),
-            ),
-            Tab(icon: Icon(Icons.portrait)),
-            Tab(
-              icon: Icon(Icons.message),
-            ),
-            Tab(
-              icon: Icon(Icons.people),
-            ),
-          ]),
-    );
-  }
+    return  Scaffold(
+          body:TabBarView(
+                children: _children,
+                controller: _tabController,
+              ),
+          bottomNavigationBar: TabBar(
+              unselectedLabelColor: Colors.black.withOpacity(0.3),
+              labelColor: Colors.blueGrey,
+              indicatorColor: Colors.transparent,
+              controller: _tabController,
+              tabs: const [
+                Tab(
+                  icon: Icon(Icons.swipe),
+                ),
+                Tab(icon: Icon(Icons.portrait)),
+                Tab(
+                  icon: Icon(Icons.message),
+                ),
+                
+              ]),
+        );
+      }
 }
